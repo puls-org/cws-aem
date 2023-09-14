@@ -64,9 +64,6 @@ def prepare_batch(translation_keys, filter_keys = [])
         end
         translations_locales = format_data(translation_keys[translation_key])
         batch_idx = (i / batch_count).floor
-        if (batch_idx > 0)
-            break
-        end
         batchs[batch_idx] ||= []
         batchs[batch_idx] << {
             "i18n_key": "#{translation_key}",
@@ -129,7 +126,5 @@ rescue Exception => e
         }
     }
 end
-
-
 # fetch_translations()
 
