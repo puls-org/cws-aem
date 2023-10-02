@@ -107,23 +107,26 @@ def get(url)
 end
 def lambda_handler(event:, context:)
 
-    keysToUpdate = event["keysToUpdate"]
+    data = JSON::parse(event["body"])
+    puts "Receive event #{JSON::pretty_generate(data)}"
+    keysToUpdate = data["keysToUpdate"]
+    puts "Keys to update #{keysToUpdate}"
     tk = fetch_translations(keysToUpdate)
     batchs = prepare_batch(tk, keysToUpdate)
     batchs.each do |batch|
         update_batch(batch)
         puts "Updated #{batch.size} done"
     end
-    {
+    response = {
         statusCode: 200,
-        body: JSON.stringify(keysToUpdate),
+        body: keysToUpdate.to_json(),
     }
 rescue Exception => e
     {
         statusCode: 502,
         body: {
             message: "#{e}"
-        }
+        }.to_json()
     }
 end
 # fetch_translations()
